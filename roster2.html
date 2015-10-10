@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Roster</title>
+
+<style>
+body {
+	margin: 0;
+}
+ul {
+	padding: 0;
+	list-style-type: none;
+}
+li {
+	text-align: center;
+	font-size: calc(90vh/16);
+	border: 3px solid blue;
+	margin: 5px;
+}
+#players li{
+	background-color: green;
+	color: white;
+}
+#subs li {
+    background-color: yellow;
+}
+</style>
+</head>
+<body>
+
+<ul id="players"></ul>
+next
+<ul id="subs"></ul>
+
+<script>
+
+var stopwatch = function() {
+    // Private vars
+    var startAt = 0;    // Time of last start / resume. (0 if not running)
+    var lapTime = 0;    // Time on the clock when last stopped in milliseconds
+
+    var now = function() {
+            return (new Date()).getTime()/1000; 
+        }; 
+
+    // Public methods
+    // Start or resume
+    this.start = function() {
+            startAt = startAt ? startAt : now();
+        };
+
+    // Stop or pause
+    this.stop = function() {
+            // If running, update elapsed time otherwise keep it
+            lapTime = startAt ? lapTime + now() - startAt : lapTime;
+            startAt = 0; // Paused
+        };
+
+    // Reset
+    this.reset = function() {
+            lapTime = startAt = 0;
+        };
+
+    // Duration
+    this.time = function() {
+            return (lapTime + (startAt ? now() - startAt : 0)); 
+        };
+};
+
+var clocktimer;
+
+function pad(num, size) {
+    var s = "0000" + num;
+    return s.substr(s.length - size);
+}
+
+function formatTime(time) {
+    var m = s = 0;
+    var newTime = '';
+
+    m = Math.floor( time / 60 );
+    time = time % 60;
+    s = Math.floor( time );
+
+    newTime = pad(m, 1) + ':' + pad(s, 2);
+    return newTime;
+}
+
+function startTimer() {
+    clocktimer = setInterval(function() {
+        players.forEach(function (player){
+            if (player.update){
+                player.update();
+            }
+        })
+    }, 1000);
+}
+
+function stopTimer() {
+    clearInterval(clocktimer);
+}
+
+var players = ["Fiona", "Iris", "Jeeyeh", "Olivia", "Rebecca", "Shelby", "Grace", "Sophia"].map(function (playerName){
+    return {name: playerName, timer: new stopwatch(), playing: false};
+})
+
+var playerList = document.getElementById('players');
+var subsList = document.getElementById('subs');
+
+players.forEach(function(player){
+	var playerNameElement = document.createTextNode(player.name);
+	var listItemElement = document.createElement('li');
+    listItemElement.appendChild(playerNameElement);
+    listItemElement.id = player.name;
+
+    var subButton = document.createElement('button');
+    subButton.appendChild(document.createTextNode('sub'));
+    listItemElement.appendChild(subButton);
+
+    var timeLabel = document.createElement('div');
+    listItemElement.appendChild(timeLabel);
+
+	subButton.onclick = function () {
+        if (player.playing){
+            playerList.removeChild(listItemElement);
+            subsList.appendChild(listItemElement);
+
+            player.timer.reset();
+            timeLabel.innerHTML = '';
+            player.update = null;
+        }
+        else {
+            subsList.removeChild(listItemElement);
+            playerList.insertBefore(listItemElement, playerList.firstChild);
+
+            player.timer.start();
+            player.update = function () {
+                timeLabel.innerHTML = formatTime(player.timer.time()); 
+            };
+        }
+        player.playing = !player.playing;
+	};
+
+	subsList.appendChild(listItemElement);
+});
+
+startTimer();
+</script>
+
+</body>
+</html>
