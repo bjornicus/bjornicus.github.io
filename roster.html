@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Roster</title>
+
+<style>
+ul {
+	list-style-type: none;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	height: 100vh;
+}
+li {
+	flex-grow: 1;
+	text-align: center;
+	font-size: 3em;
+	border: 3px solid blue;
+}
+li:nth-child(-n+3){
+	background-color: green;
+	color: white;
+}
+</style>
+</head>
+<body>
+
+<ul id="players">
+</ul>
+
+
+<script>
+	var players = [
+			{name: "Iris"}, 
+			{name: "Fiona"}, 
+			{name: "Jeeyeh"}, 
+			{name: "Olivia"}, 
+			{name: "Rebecca"},
+			{name: "Shelby"},
+			{name: "Grace"},
+			{name: "Sophia"}
+		];
+
+	var playerList = document.getElementById('players');
+
+	players.forEach(function(player, index){
+		var playerNameElement = document.createTextNode(player.name);
+		var listItemElement = document.createElement('li');
+		listItemElement.appendChild(playerNameElement);
+		listItemElement.id = player.name;
+
+		listItemElement.onclick = function () {
+			playerList.removeChild(this);
+			playerList.insertBefore(this, playerList.firstChild);
+		};
+
+		playerList.appendChild(listItemElement);
+	});
+</script>
+
+</body>
+</html>
