@@ -32,6 +32,11 @@ li {
 #subs li {
     background-color: yellow;
 }
+
+#players li.goal-keeper {
+    background-color: red;
+}
+
 </style>
 </head>
 <body>
@@ -144,6 +149,11 @@ players.forEach(function(player){
 
     var timeLabel = document.createElement('div');
     listItemElement.appendChild(timeLabel);
+
+    listItemElement.onclick = function (e) {
+        if(e.target != this) return; 
+        listItemElement.classList.toggle('goal-keeper')
+    }
 
 	subButton.onclick = function () {
         if (player.playing){
