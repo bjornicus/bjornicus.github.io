@@ -5,7 +5,7 @@ ul {
 
 .clock{
     margin: 0 5px;
-    font-size: 2em;
+    font-size: 1.8em;
 }
 .clock.last-sub {
     font-size: 1em;
@@ -21,7 +21,8 @@ ul {
     margin: 0;
 }
 .player-name{
-    margin-left: 10px; 
+    margin-left: 10px;
+    font-size: 1.7em;
 }
 
 
