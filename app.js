@@ -42131,6 +42131,8 @@ function players() {
     var action = arguments[1];
 
     switch (action.type) {
+        case 'UPDATE_TIME':
+            return state;
         case 'ADD_PLAYER':
             return [].concat(_toConsumableArray(state), [playerReducer(undefined, action)]);
         default:
