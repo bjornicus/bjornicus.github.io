@@ -1,186 +1,20 @@
 <!DOCTYPE html>
-<html>
-<head>
-	<title>Roster</title>
+<html lang="en">
+  <head>
+    <!-- Required meta tags always come first -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-<style>
-body {
-	margin: 0;
-}
-ul {
-	padding: 0;
-	list-style-type: none;
-}
-#clock-readout {
-    font-size: calc(90vh/16);
-}
-button {
-    font-size: calc(90vh/16);
-}
-li {
-	text-align: center;
-	font-size: calc(90vh/16);
-	border: 3px solid blue;
-	margin: 5px;
-    display: flex;
-    justify-content: space-between;
-}
-#players li{
-	background-color: green;
-	color: white;
-}
-#subs li {
-    background-color: yellow;
-}
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
 
-#players li.goal-keeper {
-    background-color: red;
-}
-
-</style>
-</head>
-<body>
-<div class="clock">
-    <button class="start" onclick="startGameClock()">Start</button>
-    <span id="clock-readout"></span>
-    <button class="reset" onclick="resetGameClock()">Reset</button>
-</div>
-<ul id="players"></ul>
-next
-<ul id="subs"></ul>
-
-<script>
-
-var stopwatch = function() {
-    // Private vars
-    var startAt = 0;    // Time of last start / resume. (0 if not running)
-    var lapTime = 0;    // Time on the clock when last stopped in milliseconds
-
-    var now = function() {
-            return (new Date()).getTime()/1000; 
-        }; 
-
-    // Public methods
-    // Start or resume
-    this.start = function() {
-            startAt = startAt ? startAt : now();
-        };
-
-    // Stop or pause
-    this.stop = function() {
-            // If running, update elapsed time otherwise keep it
-            lapTime = startAt ? lapTime + now() - startAt : lapTime;
-            startAt = 0; // Paused
-        };
-
-    // Reset
-    this.reset = function() {
-            lapTime = startAt = 0;
-        };
-
-    // Duration
-    this.time = function() {
-            return (lapTime + (startAt ? now() - startAt : 0)); 
-        };
-};
-
-var clocktimer;
-
-function pad(num, size) {
-    var s = "0000" + num;
-    return s.substr(s.length - size);
-}
-
-function formatTime(time) {
-    var m = s = 0;
-    var newTime = '';
-
-    m = Math.floor( time / 60 );
-    time = time % 60;
-    s = Math.floor( time );
-
-    newTime = pad(m, 2) + ':' + pad(s, 2);
-    return newTime;
-}
-
-function startTimer() {
-    clocktimer = setInterval(function() {
-        players.forEach(function (player){
-            if (player.update){
-                player.update();
-            }
-        });
-        gameClockLabel.innerHTML = formatTime(gameClock.time());
-    }, 1000);
-}
-
-function stopTimer() {
-    clearInterval(clocktimer);
-}
-
-function startGameClock() {
-    gameClock.start();
-}
-
-function resetGameClock() {
-    gameClock.reset();
-}
-
-var gameClockLabel = document.getElementById('clock-readout');
-var gameClock = new stopwatch();
-
-var players = ["Annalise", "Iris", "Jeeyeh", "Chyler", "Angelynna", "Elena", "Grace", "Sophia"].map(function (playerName){
-    return {name: playerName, timer: new stopwatch(), playing: false};
-})
-
-var playerList = document.getElementById('players');
-var subsList = document.getElementById('subs');
-
-players.forEach(function(player){
-	var listItemElement = document.createElement('li');
-
-    var subButton = document.createElement('button');
-    subButton.appendChild(document.createTextNode('sub'));
-    listItemElement.appendChild(subButton);
-
-    var playerNameElement = document.createTextNode(player.name);
-    listItemElement.appendChild(playerNameElement);
-    listItemElement.id = player.name;
-
-    var timeLabel = document.createElement('div');
-    listItemElement.appendChild(timeLabel);
-
-    listItemElement.onclick = function (e) {
-        if(e.target != this) return; 
-        listItemElement.classList.toggle('goal-keeper')
-    }
-
-	subButton.onclick = function () {
-        if (player.playing){
-            playerList.removeChild(listItemElement);
-            subsList.appendChild(listItemElement);
-
-            player.timer.reset();
-            timeLabel.innerHTML = '';
-            player.update = null;
-        }
-        else {
-            subsList.removeChild(listItemElement);
-            playerList.insertBefore(listItemElement, playerList.firstChild);
-
-            player.timer.start();
-            player.update = function () {
-                timeLabel.innerHTML = formatTime(player.timer.time()); 
-            };
-        }
-        player.playing = !player.playing;
-	};
-
-	subsList.appendChild(listItemElement);
-});
-
-startTimer();
-</script>
-
-</body>
+    <!-- Roster app -->
+    <link rel="stylesheet" type="text/css" href="/app.css">
+    <script src="/app.js"></script>
+    <script>require('initialize');</script>
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
 </html>
